@@ -22,3 +22,9 @@ logging:
   level:
     root: INFO
     org.hibernate.SQL: DEBUG
+
+exchange:
+  binance:
+    ticker-url: https://api.binance.com/api/v3/ticker/bookTicker
+  huobi:
+    ticker-url: https://api.huobi.pro/market/tickers
