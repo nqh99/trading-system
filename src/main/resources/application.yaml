@@ -28,3 +28,8 @@ exchange:
     ticker-url: https://api.binance.com/api/v3/ticker/bookTicker
   huobi:
     ticker-url: https://api.huobi.pro/market/tickers
+
+rest-client:
+  connection-timeout-in-ms: 3000
+  read-timeout-in-ms: 5000
+  connection-request-timeout-in-ms: 2000
