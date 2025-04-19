@@ -9,9 +9,16 @@ spring:
     driverClassName: ${DB_DRIVER:org.h2.Driver}
   jpa:
     database-platform: ${DB_PLATFORM:org.hibernate.dialect.H2Dialect}
-    show-sql: true
 
   h2:
     console:
       enabled: true
       path: /h2
+
+logging:
+  file:
+    name: log/system.log
+    path: log
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
