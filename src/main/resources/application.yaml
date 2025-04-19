@@ -1,3 +1,17 @@
 spring:
   application:
     name: trading-system
+
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:db}
+    username: ${DB_ADMIN:dev}
+    password: ${DB_ADMIN_PASSWORD:123123}
+    driverClassName: ${DB_DRIVER:org.h2.Driver}
+  jpa:
+    database-platform: ${DB_PLATFORM:org.hibernate.dialect.H2Dialect}
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
