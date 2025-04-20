@@ -11,6 +11,7 @@ import lombok.*;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "crypto")
 public class Crypto {
@@ -29,11 +30,17 @@ public class Crypto {
 
   @Column private BigDecimal bid;
 
+  @Column(name = "bid_qty", precision = 15, scale = 7)
+  private BigDecimal bidQty;
+
   @Column private BigDecimal ask;
+
+  @Column(name = "ask_qty", precision = 15, scale = 7)
+  private BigDecimal askQty;
 
   @Column @NonNull @EqualsAndHashCode.Include private String status;
 
-  @Column private LocalDateTime createdAt;
+  @Column @ToString.Exclude private LocalDateTime createdAt;
 
-  @Column private LocalDateTime updatedAt;
+  @Column @ToString.Exclude private LocalDateTime updatedAt;
 }
