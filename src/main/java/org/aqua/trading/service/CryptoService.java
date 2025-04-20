@@ -2,6 +2,7 @@ package org.aqua.trading.service;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
@@ -12,9 +13,11 @@ import org.aqua.trading.config.exchange.HuobiConfig;
 import org.aqua.trading.dto.core.CryptoDto;
 import org.aqua.trading.dto.exchange.response.HuobiResponseDto;
 import org.aqua.trading.entity.Crypto;
+import org.aqua.trading.exception.BusinessException;
 import org.aqua.trading.repository.CryptoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -37,6 +40,34 @@ public class CryptoService {
     this.cryptoRepository = cryptoRepository;
     this.huobiConfig = huobiConfig;
     this.binanceConfig = binanceConfig;
+  }
+
+  public CryptoDto findBestAggregatedPrice(String symbol) {
+    Crypto crypto = cryptoRepository.findBySymbolAndStatus(symbol, "N");
+    if (crypto == null) {
+      throw new BusinessException(
+          HttpStatus.BAD_REQUEST,
+          MessageFormat.format("No cryptocurrency found with symbol: {0}", symbol));
+    }
+
+    BigDecimal bidPrice = crypto.getBid();
+    BigDecimal askPrice = crypto.getAsk();
+
+    if (bidPrice.compareTo(askPrice) >= 0) {
+      throw new BusinessException(
+          HttpStatus.BAD_REQUEST,
+          MessageFormat.format(
+              "Bid price ({0}) is greater than or equal Ask price ({1}) for symbol: {2}",
+              bidPrice, askPrice, symbol));
+    }
+
+    CryptoDto cryptoDto = new CryptoDto();
+    cryptoDto.setId(crypto.getId().toString());
+    cryptoDto.setSymbol(crypto.getSymbol());
+    cryptoDto.setBid(bidPrice);
+    cryptoDto.setAsk(askPrice);
+
+    return cryptoDto;
   }
 
   @Scheduled(fixedDelay = 10000)

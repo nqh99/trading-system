@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CryptoRepository extends JpaRepository<Crypto, UUID> {
   List<Crypto> findAllByStatus(String status);
+
+  Crypto findBySymbolAndStatus(String symbol, String status);
 }
