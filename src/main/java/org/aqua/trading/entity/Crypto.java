@@ -29,7 +29,13 @@ public class Crypto {
 
   @Column private BigDecimal bid;
 
+  @Column(name = "bid_qty", precision = 15, scale = 7)
+  private BigDecimal bidQty;
+
   @Column private BigDecimal ask;
+
+  @Column(name = "ask_qty", precision = 15, scale = 7)
+  private BigDecimal askQty;
 
   @Column @NonNull @EqualsAndHashCode.Include private String status;
 

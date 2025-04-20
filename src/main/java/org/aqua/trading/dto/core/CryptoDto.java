@@ -25,8 +25,14 @@ public class CryptoDto {
   @JsonAlias({"bid", "bidPrice"})
   private BigDecimal bid;
 
+  @JsonAlias({"bidSize", "bidQty"})
+  private BigDecimal bidQty;
+
   @JsonAlias({"ask", "askPrice"})
   private BigDecimal ask;
+
+  @JsonAlias({"askSize", "askQty"})
+  private BigDecimal askQty;
 
   private String status;
 }

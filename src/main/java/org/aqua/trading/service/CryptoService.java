@@ -130,6 +130,13 @@ public class CryptoService {
               .min(BigDecimal::compareTo)
               .orElse(crypto.getBid());
 
+      BigDecimal bidQty =
+          (bidPrice.equals(cryptoDataFromBinance.getBid()))
+              ? Optional.of(cryptoDataFromBinance.getBidQty()).orElseGet(crypto::getBidQty)
+              : (bidPrice.equals(cryptoDataFromHuobi.getBid()))
+                  ? Optional.of(cryptoDataFromHuobi.getBidQty()).orElseGet(crypto::getBidQty)
+                  : crypto.getBidQty();
+
       BigDecimal askPrice =
           Stream.of(
                   Optional.ofNullable(cryptoDataFromBinance.getAsk()),
@@ -139,16 +146,27 @@ public class CryptoService {
               .max(BigDecimal::compareTo)
               .orElse(crypto.getAsk());
 
+      BigDecimal askQty =
+          (askPrice.equals(cryptoDataFromBinance.getAsk()))
+              ? Optional.of(cryptoDataFromBinance.getAskQty()).orElseGet(crypto::getAskQty)
+              : (askPrice.equals(cryptoDataFromHuobi.getAsk()))
+                  ? Optional.of(cryptoDataFromHuobi.getAskQty()).orElseGet(crypto::getAskQty)
+                  : crypto.getAskQty();
+
       boolean needUpdate = false;
       if (!bidPrice.equals(crypto.getBid())) {
-        log.info("Update Bid price {} for symbol: {}", bidPrice, symbol);
+        log.info(
+            "Update Bid price ({}) | Bid Quantity ({}) for symbol: {}", bidPrice, bidQty, symbol);
         crypto.setBid(bidPrice);
+        crypto.setBidQty(bidQty);
         needUpdate = true;
       }
 
       if (!askPrice.equals(crypto.getAsk())) {
-        log.info("Update Ask price {} for symbol: {}", askPrice, symbol);
+        log.info(
+            "Update Ask price ({}) | Ask Quantity ({}) for symbol: {}", askPrice, askQty, symbol);
         crypto.setAsk(askPrice);
+        crypto.setAskQty(askQty);
         needUpdate = true;
       }
 
