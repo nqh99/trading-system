@@ -23,7 +23,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             new ExceptionDto(
                 exception.getStatus().getReasonPhrase(),
                 request.getServletPath(),
-                exception.getMessage()));
+                exception.getMessage(),
+                exception.getDetail()));
   }
 
   private void logError(String msg, HttpServletRequest request) {
