@@ -14,3 +14,4 @@ CREATE TABLE crypto
 );
 
 CREATE INDEX idx_crypto_1 ON crypto (status);
+CREATE INDEX idx_crypto_2 ON crypto (symbol, status);
