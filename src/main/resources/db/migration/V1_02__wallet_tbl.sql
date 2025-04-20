@@ -1,13 +1,13 @@
 CREATE TABLE wallet
 (
-    id         UUID PRIMARY KEY NOT NULL,
-    user_id    VARCHAR(255)     NOT NULL,
-    name       VARCHAR(255),
-    balance    DECIMAL(20, 3) DEFAULT 0,
-    priority   INT            DEFAULT 0,
-    status     VARCHAR(30)      NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    id           UUID PRIMARY KEY NOT NULL,
+    user_id      UUID             NOT NULL,
+    name         VARCHAR(255),
+    cash_balance DECIMAL(20, 3) DEFAULT 0,
+    priority     INT            DEFAULT 0,
+    status       VARCHAR(30)      NOT NULL,
+    created_at   TIMESTAMP,
+    updated_at   TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );

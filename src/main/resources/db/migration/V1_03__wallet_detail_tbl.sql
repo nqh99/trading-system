@@ -1,8 +1,8 @@
 CREATE TABLE wallet_detail
 (
     id         UUID PRIMARY KEY NOT NULL,
-    wallet_id  VARCHAR(255)     NOT NULL,
-    crypto_id  VARCHAR(255)     NOT NULL,
+    wallet_id  UUID             NOT NULL,
+    crypto_id  UUID             NOT NULL,
     amount     DECIMAL(15, 3) DEFAULT 0,
     status     VARCHAR(30)      NOT NULL,
     created_at TIMESTAMP,

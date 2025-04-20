@@ -5,14 +5,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.math.BigDecimal;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonInclude(Include.NON_NULL)
 public class CryptoDto {
 
-  private String id;
+  @EqualsAndHashCode.Include private String id;
 
   private String symbol;
+
+  private BigDecimal price;
+
+  private BigDecimal amount;
 
   private Float open;
 
@@ -34,5 +40,5 @@ public class CryptoDto {
   @JsonAlias({"askSize", "askQty"})
   private BigDecimal askQty;
 
-  private String status;
+  @EqualsAndHashCode.Include private String status;
 }
