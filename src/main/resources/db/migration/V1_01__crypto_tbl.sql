@@ -12,3 +12,5 @@ CREATE TABLE crypto
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
+
+CREATE INDEX idx_crypto_1 ON crypto (status);
