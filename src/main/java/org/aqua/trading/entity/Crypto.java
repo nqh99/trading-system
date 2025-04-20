@@ -20,6 +20,10 @@ public class Crypto {
 
   @NonNull @EqualsAndHashCode.Include private String symbol;
 
+  @Column private BigDecimal price;
+
+  @Column private BigDecimal amount;
+
   @Column private BigDecimal open;
 
   @Column private BigDecimal high;
