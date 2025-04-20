@@ -3,6 +3,7 @@ package org.aqua.trading.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.*;
 
 @Data
@@ -17,7 +18,7 @@ public class Wallet {
   @Column(nullable = false)
   @ToString.Include
   @EqualsAndHashCode.Include
-  private String id;
+  private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
