@@ -1,7 +1,6 @@
 CREATE TABLE order_history
 (
-    id         UUID PRIMARY KEY NOT NULL,
-    order_id   VARCHAR(255)     NOT NULL,
+    order_id   UUID PRIMARY KEY NOT NULL,
     user_id    VARCHAR(255)     NOT NULL,
     crypto_id  VARCHAR(255)     NOT NULL,
     price      DECIMAL(15, 3) DEFAULT 0,
@@ -11,11 +10,9 @@ CREATE TABLE order_history
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
 
-    FOREIGN KEY (order_id) REFERENCES "order" (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE,
     FOREIGN KEY (crypto_id) REFERENCES crypto (id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_order_history_1 ON order_history (user_id, status);
 CREATE INDEX idx_order_history_2 ON order_history (crypto_id, status);
-CREATE INDEX idx_order_history_3 ON order_history (bs, status);
