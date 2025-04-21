@@ -26,9 +26,9 @@ public class Wallet {
 
   @Column private String name;
 
-  @Column(precision = 20, scale = 3)
+  @Column(name = "cash_balance", precision = 20, scale = 3)
   @ToString.Include
-  private BigDecimal balance = BigDecimal.ZERO;
+  private BigDecimal cashBalance = BigDecimal.ZERO;
 
   @Column(nullable = false)
   @EqualsAndHashCode.Include

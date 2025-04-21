@@ -12,21 +12,19 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "wallet_detail")
+@IdClass(WalletDetail.WalletDetailId.class)
 public class WalletDetail {
 
   @Id
-  @Column(nullable = false)
+  @Column(name = "wallet_id", nullable = false)
   @ToString.Include
   @EqualsAndHashCode.Include
-  private UUID id;
+  private UUID walletId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "wallet_id", nullable = false)
-  private Wallet wallet;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "crypto_id", nullable = false)
-  private Crypto crypto;
+  @Id
+  @Column(name = "crypto_id", nullable = false)
+  @EqualsAndHashCode.Include
+  private UUID cryptoId;
 
   @Column(precision = 15, scale = 3)
   private BigDecimal amount = BigDecimal.ZERO;
@@ -41,4 +39,10 @@ public class WalletDetail {
 
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
+
+  @Data
+  public static class WalletDetailId {
+    private UUID walletId;
+    private UUID cryptoId;
+  }
 }

@@ -1,7 +1,7 @@
 package org.aqua.trading.service;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.aqua.trading.dto.core.CryptoDto;
@@ -25,19 +25,21 @@ public class WalletService {
         walletRepository.retrieveWalletBalanceById(UUID.fromString(walletId));
 
     WalletDto walletDto = new WalletDto();
-    walletDto.setCryptoMap(new HashSet<>());
+    walletDto.setCryptoMap(new HashMap<>());
     for (Object[] row : balanceInfo) {
       walletDto.setId(row[0].toString());
       walletDto.setName((String) row[1]);
       walletDto.setCashBalance((BigDecimal) row[2]);
 
-      CryptoDto cryptoDto = new CryptoDto();
-      cryptoDto.setId(row[3].toString());
-      cryptoDto.setSymbol((String) row[4]);
-      cryptoDto.setAmount((BigDecimal) row[5]);
-      cryptoDto.setPrice((BigDecimal) row[6]);
+      if (row[3] != null) {
+        CryptoDto cryptoDto = new CryptoDto();
+        cryptoDto.setId(row[3].toString());
+        cryptoDto.setSymbol((String) row[4]);
+        cryptoDto.setAmount((BigDecimal) row[5]);
+        cryptoDto.setPrice((BigDecimal) row[6]);
 
-      walletDto.getCryptoMap().add(cryptoDto);
+        walletDto.getCryptoMap().putIfAbsent(cryptoDto.getId(), cryptoDto);
+      }
     }
 
     return walletDto;

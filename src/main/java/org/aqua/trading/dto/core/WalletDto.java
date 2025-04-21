@@ -1,7 +1,7 @@
 package org.aqua.trading.dto.core;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,5 +15,5 @@ public class WalletDto {
 
   private BigDecimal cashBalance;
 
-  private Set<CryptoDto> cryptoMap;
+  private HashMap<String, CryptoDto> cryptoMap;
 }
