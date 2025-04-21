@@ -1,13 +1,16 @@
 package org.aqua.trading.service;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.aqua.trading.dto.core.CryptoDto;
 import org.aqua.trading.dto.core.WalletDto;
+import org.aqua.trading.exception.BusinessException;
 import org.aqua.trading.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,10 @@ public class WalletService {
   public WalletDto retrieveBalanceByUserWallet(String walletId) {
     List<Object[]> balanceInfo =
         walletRepository.retrieveWalletBalanceById(UUID.fromString(walletId));
+
+    if (balanceInfo.isEmpty()) {
+      throw new BusinessException(HttpStatus.BAD_REQUEST, MessageFormat.format("Wallet (id: {0}) not found!", walletId));
+    }
 
     WalletDto walletDto = new WalletDto();
     walletDto.setCryptoMap(new HashMap<>());
