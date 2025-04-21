@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.aqua.trading.dto.core.TradeDto;
@@ -11,6 +12,7 @@ import org.aqua.trading.entity.*;
 import org.aqua.trading.exception.BusinessException;
 import org.aqua.trading.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,42 @@ public class TradingService {
     this.orderRepository = orderRepository;
     this.walletDetailRepository = walletDetailRepository;
     this.orderHistoryRepository = orderHistoryRepository;
+  }
+
+  public List<OrderHistory> retrieveOrderHistoryByUser(
+      String userId, String status, LocalDateTime fromDate, LocalDateTime toDate) {
+    Specification<OrderHistory> spec = (root, query, cb) -> cb.conjunction();
+
+    if (userId != null) {
+      User user =
+          userRepository
+              .findByIdAndStatus(UUID.fromString(userId), "N")
+              .orElseThrow(
+                  () -> new BusinessException(HttpStatus.BAD_REQUEST, "User not found!", MessageFormat.format("User (id: {0}) not found!", userId)));
+      spec = spec.and((root, query, cb) -> cb.equal(root.get("user").get("id"), user.getId()));
+    }
+
+    if (status != null) {
+      spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
+    }
+
+    if (fromDate != null) {
+      spec =
+          spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), fromDate));
+    }
+
+    if (toDate != null) {
+      spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), toDate));
+    }
+
+    List<OrderHistory> orderHistory = orderHistoryRepository.findAll(spec);
+
+    if (orderHistory.isEmpty()) {
+      throw new BusinessException(
+          HttpStatus.NOT_FOUND, "No order history found!", String.valueOf(userId));
+    }
+
+    return orderHistory;
   }
 
   @Transactional
@@ -138,10 +176,22 @@ public class TradingService {
       walletDetail.setCreatedAt(LocalDateTime.now());
       walletDetail.setUpdatedAt(LocalDateTime.now());
       walletDetailRepository.save(walletDetail);
+
+      OrderHistory orderHistory = new OrderHistory();
+      orderHistory.setOrderId(newOrder.getId());
+      orderHistory.setUser(user);
+      orderHistory.setCrypto(crypto);
+      orderHistory.setPrice(newOrder.getPrice());
+      orderHistory.setAmount(newOrder.getAmount());
+      orderHistory.setBs(newOrder.getBs());
+      orderHistory.setStatus(orderStatus);
+      orderHistory.setCreatedAt(newOrder.getCreatedAt());
+      orderHistory.setUpdatedAt(newOrder.getUpdatedAt());
+
+      orderHistoryRepository.save(orderHistory);
     }
 
     orderRepository.save(newOrder);
-    orderHistoryRepository.save(newOrder);
     userRepository.save(user);
     walletRepository.save(spotWallet);
   }
