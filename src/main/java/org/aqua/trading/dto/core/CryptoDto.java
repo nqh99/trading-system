@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonInclude(Include.NON_NULL)
 public class CryptoDto {
 
-  @EqualsAndHashCode.Include private String id;
+  @UUID @EqualsAndHashCode.Include private String id;
 
   private String symbol;
 

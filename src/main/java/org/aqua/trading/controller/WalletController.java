@@ -2,6 +2,7 @@ package org.aqua.trading.controller;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.aqua.trading.service.WalletService;
+import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class WalletController {
 
   @PostMapping("/balance")
   public ResponseEntity<Object> retrieveBalanceByUserWallet(
-      @RequestParam @NotEmpty String walletId) {
+      @RequestParam @NotEmpty @UUID String walletId) {
     return ResponseEntity.ok(walletService.retrieveBalanceByUserWallet(walletId));
   }
 }

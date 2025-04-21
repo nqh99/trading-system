@@ -4,12 +4,13 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class WalletDto {
 
-  @EqualsAndHashCode.Include private String id;
+  @UUID @EqualsAndHashCode.Include private String id;
 
   private String name;
 
