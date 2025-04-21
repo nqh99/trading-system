@@ -1,6 +1,7 @@
 package org.aqua.trading.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,16 +49,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 })
             .toList();
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(
-            new ExceptionDto(
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ((ServletWebRequest) request).getRequest().getServletPath(),
-                "Validation error!",
-                detailList));
+    ExceptionDto responseDto =
+        new ExceptionDto(
+            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            ((ServletWebRequest) request).getRequest().getServletPath(),
+            "Validation error",
+            detailList);
+
+    logError(
+        MessageFormat.format("{0} {1}", responseDto.getMessage(), responseDto.getDetail()),
+        ((ServletWebRequest) request).getRequest());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
   }
 
-  @ExceptionHandler
+  @ExceptionHandler(Exception.class)
   public ResponseEntity<ExceptionDto> handleException(
       Throwable throwable, HttpServletRequest request) {
     logError("Unhandled exception", request);
